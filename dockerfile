@@ -1,14 +1,11 @@
 # Gunakan image Nginx sebagai base
 FROM nginx:latest
 
-# Hapus konfigurasi default Nginx
-RUN rm -rf /usr/share/nginx/html/*
-
-# Copy file website ke dalam container
+# Copy file website ke dalam folder default Nginx
 COPY . /usr/share/nginx/html
 
-# Expose port 3002 agar bisa diakses dari luar
-EXPOSE 3002
+# Expose port 80 agar bisa diakses
+EXPOSE 80
 
-# Jalankan Nginx di foreground agar container tetap hidup
+# Jalankan Nginx di foreground mode
 CMD ["nginx", "-g", "daemon off;"]
