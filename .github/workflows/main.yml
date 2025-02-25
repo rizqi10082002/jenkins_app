@@ -1,0 +1,37 @@
+name: CI Testing
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          npm install -g htmlhint stylelint eslint
+
+      - name: Run HTML Linter (HTMLHint)
+        run: |
+          htmlhint "**/*.html" || true
+
+      - name: Run CSS Linter (Stylelint)
+        run: |
+          stylelint "**/*.css" || true
+
+      - name: Run JS Linter (ESLint)
+        run: |
+          eslint "**/*.js" || true
+
+  trigger-jenkins:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Jenkins Deployment
+        run: |
+          curl -X POST "https://b070-112-215-235-84.ngrok-free.app/job/jenkins_app/build?token=app_web"
